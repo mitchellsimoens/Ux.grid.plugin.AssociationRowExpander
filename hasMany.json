@@ -4,8 +4,8 @@
             "companyId": 1,
             "company": "3m Co",
             "price": 71.72,
-            "change": 0.02,
-            "pctChange": 0.03,
+            "change": -0.02,
+            "pctChange": -0.03,
             "lastChange": "9/1 12:00am",
             "history" : [
                 { "date" : "9/1 12:00am", "text" : "Test" },

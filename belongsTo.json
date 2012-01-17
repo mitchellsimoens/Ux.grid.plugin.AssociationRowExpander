@@ -3,28 +3,12 @@
         {
             "date": "9/1 12:00am",
             "text": "Test",
-            "companyId" : 1,
-            "comapny": {
-                "companyId": 1,
-                "company": "3m Co",
-                "price": 71.72,
-                "change": 0.02,
-                "pctChange": 0.03,
-                "lastChange": "9/1 12:00am"
-            }
+            "companyId": 1
         },
         {
             "date": "8/1 12:00am",
             "text": "Initial",
-            "companyId" : 2,
-            "company": {
-                "companyId": 2,
-                "company": "Alcoa Inc",
-                "price": 29.01,
-                "change": 0.42,
-                "pctChange": 1.47,
-                "lastChange": "9/1 12:00am"
-            }
+            "companyId": 2
         }
     ]
 }

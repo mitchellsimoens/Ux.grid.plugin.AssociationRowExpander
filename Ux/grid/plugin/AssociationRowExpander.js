@@ -66,13 +66,16 @@ Ext.define('Ux.grid.plugin.AssociationRowExpander', {
         'itemdblclick'
     ],
 
-    constructor : function() {
-        this.callParent(arguments);
+    constructor : function(config) {
+        var me  = this,
+            tpl = config.rowBodyTpl || me.rowBodyTpl;
 
-        this.cmps = new Ext.util.MixedCollection();
+        me.callParent(arguments);
 
-        if (typeof this.rowBodyTpl == 'string' && this.type !== 'hasMany') {
-            this.rowBodyTpl = new Ext.XTemplate(this.rowBodyTpl);
+        me.cmps = new Ext.util.MixedCollection();
+
+        if ((typeof tpl == 'string' || Ext.isArray(tpl)) && me.type !== 'hasMany') {
+            me.rowBodyTpl = new Ext.XTemplate(tpl);
         }
     },
 

@@ -72,7 +72,8 @@
             hasOne : {
                 model      : 'Company',
                 name       : 'companies',
-                foreignKey : 'companyId'
+                foreignKey : 'companyId',
+                getterName : 'getCompanyOne'
             }
         });
 
@@ -90,8 +91,7 @@
                         }
                     }
                 }),
-                title    : 'Grid with inner Grid for hasMany association',
-                renderTo : Ext.getBody(),
+                renderTo : 'hasManyGrid',
                 width    : 600,
                 height   : 300,
                 columns  : [
@@ -139,8 +139,7 @@
                         }
                     }
                 }),
-                title    : 'Grid with inner DataView for hasMany association',
-                renderTo : Ext.getBody(),
+                renderTo : 'hasManyView',
                 width    : 600,
                 height   : 300,
                 columns  : [
@@ -173,8 +172,7 @@
                     model    : 'History',
                     autoLoad : true
                 }),
-                title    : 'Grid with inner belongsTo association',
-                renderTo : Ext.getBody(),
+                renderTo : 'belongsTo',
                 width    : 600,
                 height   : 300,
                 columns  : [
@@ -186,7 +184,25 @@
                         ptype      : 'associationrowexpander',
                         type       : 'belongsTo',
                         getterName : 'getCompany',
-                        rowBodyTpl : '<div><b>Company Details:</b></div><div>{company}</div>'
+                        rowBodyTpl : new Ext.XTemplate(
+                                         '<div><b>Company Details:</b></div>',
+                                         '<div>{company} - {[this.colorVal(values.price, true)]}</div>',
+                                         '<div>{lastChange:date("n/j g:ia")}</div>',
+                                         '<div>{[this.colorVal(values.change, true)]} {[this.colorVal(values.pctChange, false)]}</div>',
+                                         {
+                                             colorVal : function(value, money) {
+                                                 var color = value === 0 ? '000' : (value > 0 ? '093' : 'F00');
+
+                                                 if (money) {
+                                                     value = Ext.util.Format.usMoney(value);
+                                                 } else {
+                                                     value += '%';
+                                                 }
+
+                                                 return '<span style="color: #' + color + ';">' + value + '</span>';
+                                             }
+                                         }
+                                     )
                     }
                 ]
             });
@@ -196,8 +212,7 @@
                     model    : 'History',
                     autoLoad : true
                 }),
-                title    : 'Grid with inner hasOne association',
-                renderTo : Ext.getBody(),
+                renderTo : 'hasOne',
                 width    : 600,
                 height   : 300,
                 columns  : [
@@ -208,14 +223,32 @@
                     {
                         ptype      : 'associationrowexpander',
                         type       : 'hasOne',
-                        getterName : 'getCompany',
-                        rowBodyTpl : '<div><b>Company Details:</b></div><div>{company}</div>'
+                        getterName : 'getCompanyOne',
+                        rowBodyTpl : new Ext.XTemplate(
+                                         '<div><b>Company Details:</b></div>',
+                                         '<div>{company} - {[this.colorVal(values.price, true)]}</div>',
+                                         '<div>{lastChange:date("n/j g:ia")}</div>',
+                                         '<div>{[this.colorVal(values.change, true)]} {[this.colorVal(values.pctChange, false)]}</div>',
+                                         {
+                                             colorVal : function(value, money) {
+                                                 var color = value === 0 ? '000' : (value > 0 ? '093' : 'F00');
+
+                                                 if (money) {
+                                                     value = Ext.util.Format.usMoney(value);
+                                                 } else {
+                                                     value += '%';
+                                                 }
+
+                                                 return '<span style="color: #' + color + ';">' + value + '</span>';
+                                             }
+                                         }
+                                     )
                     }
                 ]
             });
         });
     </script>
-    <style>
+    <style type="text/css">
         body {
             padding : 50px;
         }
@@ -224,8 +257,32 @@
             height       : 16px;
             padding-left : 20px;
         }
+        #hasManyGrid {
+            position : absolute;
+            top      : 50px;
+            left     : 50px;
+        }
+        #hasManyView {
+            position : absolute;
+            top      : 50px;
+            left     : 700px;
+        }
+        #belongsTo {
+            position : absolute;
+            top      : 400px;
+            left     : 50px;
+        }
+        #hasOne {
+            position : absolute;
+            top      : 400px;
+            left     : 700px;
+        }
     </style>
 </head>
 <body>
+<div id="hasManyGrid"><b>hasMany</b> association with an inner Ext.grid.Panel</div>
+<div id="hasManyView"><b>hasMany</b> association with an inner Ext.view.View</div>
+<div id="belongsTo"><b>belongsTo</b> association using an Ext.XTemplate</div>
+<div id="hasOne"><b>hasOne</b> association using an Ext.XTemplate</div>
 </body>
 </html>
