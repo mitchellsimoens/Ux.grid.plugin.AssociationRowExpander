@@ -3,13 +3,11 @@
 <head>
     <meta http-equiv='Content-Type' content='text/html; charset=iso-8859-1'>
     <title>Ux.grid.plugin.HasManyExpander</title>
-    <link rel='stylesheet' type='text/css' href='../ext-4.1.0-beta-1/resources/css/ext-all.css' />
-    <script type='text/javascript' src='../ext-4.1.0-beta-1/ext.js'></script>
+    <link rel='stylesheet' type='text/css' href='../extjs-4.1.0-rc3/resources/css/ext-all.css' />
+    <script type='text/javascript' src='../extjs-4.1.0-rc3/ext-debug.js'></script>
     
     <script type='text/javascript'>
         Ext.Loader.setConfig({
-            enabled : true,
-            disableCaching : false,
             paths   : {
                 'Ext.ux' : '../ext-4.1.0-beta-1/examples/ux/'
             }
@@ -17,6 +15,8 @@
 
         Ext.require([
             'Ext.grid.Panel',
+            'Ext.data.Store',
+            'Ext.data.writer.Writer', //bug in Ext JS 4.1.0 RC3, proxy should require this, bug already opened
             'Ux.grid.plugin.AssociationRowExpander'
         ]);
 
