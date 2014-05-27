@@ -120,7 +120,10 @@ Ext.define('Ux.grid.plugin.AssociationRowExpander', {
             }
 
             if (eGrid && eGrid.id !== grid.el.id) {
-                e.stopEvent();
+                //hmmm, should come up with a better way
+                if (e.type !== 'contextmenu' && e.type !== 'keydown') {
+                    e.stopEvent();
+                }
 
                 return;
             }
