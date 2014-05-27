@@ -1,5 +1,5 @@
 Ext.define('Ux.grid.plugin.AssociationRowExpander', {
-    extend : 'Ext.ux.RowExpander',
+    extend : 'Ext.grid.plugin.RowExpander',
     alias  : 'plugin.associationrowexpander',
 
     /**
