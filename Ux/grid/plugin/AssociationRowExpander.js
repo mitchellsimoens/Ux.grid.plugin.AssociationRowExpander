@@ -79,16 +79,6 @@ Ext.define('Ux.grid.plugin.AssociationRowExpander', {
         }
     },
 
-    init : function(outerGrid) {
-        var me = this;
-
-        me.callParent(arguments);
-
-        outerGrid.on('beforeselect', function(selModel, rec) {
-            return !!rec;
-        });
-    },
-
     toggleRow : function(rowIdx) {
         var me        = this,
             rowNode   = me.view.getNode(rowIdx),
