@@ -72,11 +72,37 @@ Ext.define('Ux.grid.plugin.AssociationRowExpander', {
 
         me.callParent(arguments);
 
-        me.cmps = new Ext.util.MixedCollection();
+        me.cmps = new Ext.util.MixedCollection(null, function(o) {
+            return o.recordId;
+        });
 
         if ((typeof tpl == 'string' || Ext.isArray(tpl)) && me.type !== 'hasMany') {
             me.rowBodyTpl = new Ext.XTemplate(tpl);
         }
+    },
+
+    init : function(grid) {
+        var me    = this,
+            view  = grid.getView(),
+            oldFn = view.processUIEvent;
+
+        view.processUIEvent = function(e) {
+            var view = this,
+                item = e.getTarget(view.dataRowSelector || view.itemSelector, view.getTargetEl()),
+                eGrid;
+
+            eGrid = Ext.fly(item).up('.x-grid'); //grid el of UI event
+
+            if (eGrid.id !== grid.el.id) {
+                e.stopEvent();
+
+                return;
+            }
+
+            return oldFn.apply(view, arguments);
+        };
+
+        me.callParent(arguments);
     },
 
     toggleRow : function(rowIdx) {
@@ -185,6 +211,12 @@ Ext.define('Ux.grid.plugin.AssociationRowExpander', {
 
             me.bindEvents(cmp);
         }
+    },
+
+    getInnerCmp : function(record) {
+        return this.cmps.getByKey(
+            record.getObservableId()
+        );
     },
 
     collapseCmp : function(row, record) {
