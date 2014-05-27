@@ -68,13 +68,16 @@ Ext.define('Ux.grid.plugin.AssociationRowExpander', {
 
     constructor : function(config) {
         var me  = this,
-            tpl = config.rowBodyTpl || me.rowBodyTpl;
+            tpl = config.rowBodyTpl || me.rowBodyTpl,
+            cmps;
 
         me.callParent(arguments);
 
-        me.cmps = new Ext.util.MixedCollection(null, function(o) {
+        cmps = me.cmps = new Ext.util.MixedCollection(null, function(o) {
             return o.recordId;
         });
+
+        cmps.on('remove', me.onCmpRemove, me);
 
         if ((typeof tpl == 'string' || Ext.isArray(tpl)) && me.type !== 'hasMany') {
             me.rowBodyTpl = new Ext.XTemplate(tpl);
@@ -82,27 +85,48 @@ Ext.define('Ux.grid.plugin.AssociationRowExpander', {
     },
 
     init : function(grid) {
-        var me    = this,
-            view  = grid.getView(),
-            oldFn = view.processUIEvent;
+        var me   = this,
+            view = grid.getView();
 
-        view.processUIEvent = function(e) {
-            var view = this,
-                item = e.getTarget(view.dataRowSelector || view.itemSelector, view.getTargetEl()),
-                eGrid;
+        view.processUIEvent = me.createProcessUIEvent(view.processUIEvent);
 
-            eGrid = Ext.fly(item).up('.x-grid'); //grid el of UI event
+        me.callParent(arguments);
+    },
 
-            if (eGrid.id !== grid.el.id) {
+    destroy : function() {
+        var cmps = this.cmps;
+
+        cmps.removeAll();
+
+        this.callParent();
+    },
+
+    onCmpRemove : function(cmp) {
+        cmp.destroy();
+    },
+
+    createProcessUIEvent : function(oldFn) {
+        var grid = this.getCmp();
+
+        return function(e) {
+            var me   = this,
+                item = e.getTarget(me.dataRowSelector || me.itemSelector, me.getTargetEl()),
+                row, eGrid;
+
+            row = Ext.fly(item);
+
+            if (row) {
+                eGrid = row.up('.x-grid'); // grid el of UI event
+            }
+
+            if (eGrid && eGrid.id !== grid.el.id) {
                 e.stopEvent();
 
                 return;
             }
 
-            return oldFn.apply(view, arguments);
+            return oldFn.apply(me, arguments);
         };
-
-        me.callParent(arguments);
     },
 
     toggleRow : function(rowIdx) {
